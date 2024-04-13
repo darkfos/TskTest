@@ -1,14 +1,17 @@
 [tool.poetry]
-name = "taskprojects"
+name = "tasks"
 version = "0.1.0"
-description = "Simple project for study"
-authors = ["darkfos82"]
+description = ""
+authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-fastapi = {extras = ["all"], version = "^0.110.1"}
+alembic = "^1.13.1"
 sqlalchemy = "^2.0.29"
+fastapi = {extras = ["all"], version = "^0.110.1"}
+python-dotenv = "^1.0.1"
+aiosqlite = "^0.20.0"
 
 
 [build-system]

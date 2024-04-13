@@ -8,7 +8,6 @@ from typing import Literal
 class UserTable(MainBase):
     __tablename__ = "user"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
     name_user: Mapped[str] = mapped_column(String(150))
     login: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
     sex: Mapped[Literal["male", "female"]] = mapped_column(String(12))

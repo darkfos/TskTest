@@ -24,9 +24,7 @@ class Database:
         """
 
         async with self.session_maker.begin() as session:
-            yield session
-            await session.close()
+            return session
 
 
-
-db_connect = Database()
+db_connect: Database = Database()

@@ -2,14 +2,12 @@ import asyncio
 import uvicorn
 
 from fastapi import FastAPI
-
-from db import MainBase
+from db.db_connection import db_connect
 
 application: FastAPI = FastAPI()
-MainBase.metadata.create_all
-
 
 if __name__ == "__main__":
+    #asyncio.run(db_connect.create_tables()) - Create Tables
     uvicorn.run(
         app=application
     )

@@ -18,8 +18,9 @@ class Settings:
 
 class SettingsPost:
     title_length = 150
-    date: datetime.datetime = datetime.datetime.now()
+    date: datetime.datetime = datetime.datetime.now().date()
 
 
 settings = Settings()
 settings_for_post = SettingsPost()
+print(settings_for_post.date)

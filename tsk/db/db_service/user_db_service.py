@@ -12,7 +12,8 @@ import asyncio
 
 class UserDbService(Crud):
 
-    async def get_one(self, user_id: int, session: AsyncSession) -> Union[UserTable, bool]:
+    @staticmethod
+    async def get_one(user_id: int, session: AsyncSession) -> Union[UserTable, bool]:
         """
         Gettind one user by id
         :param user_id:
@@ -33,10 +34,12 @@ class UserDbService(Crud):
         finally:
             await session.close()
 
-    async def get_all(self):
+    @staticmethod
+    async def get_all():
         print(2)
 
-    async def add_one(self, new_user: AddNewUser, session: AsyncSession) -> Union[UserTable, bool]:
+    @staticmethod
+    async def add_one(new_user: AddNewUser, session: AsyncSession) -> Union[UserTable, bool]:
         """
         Add a new user
         :param new_user:
@@ -59,11 +62,10 @@ class UserDbService(Crud):
         finally:
             await session.close()
 
-    async def update_one(self, detail: dict):
+    @staticmethod
+    async def update_one(detail: dict):
         print(3)
 
-    async def del_one(self, user_id: int):
+    @staticmethod
+    async def del_one(user_id: int):
         print(4)
-
-
-db_user_service = UserDbService()

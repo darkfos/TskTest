@@ -18,3 +18,15 @@ class AddNewUser(BaseModel):
     login: Annotated[str, Field(max_length=80, min_length=6)]
     sex: SexUser
     password: Annotated[int,  Field()]
+
+
+class UserUpdate(AddNewUser, BaseModel):
+    pass
+
+
+class User(AddNewUser, BaseModel):
+    """
+    Basic model user
+    """
+
+    id: Annotated[int, Field()]

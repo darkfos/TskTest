@@ -3,10 +3,10 @@ from tsk.db.db_connection import db_connect
 from tsk.abs_crud import Crud
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import Result
-from sqlalchemy import select
-from tsk.api.models.UserPDModel import AddNewUser
-from typing import Union
+from sqlalchemy import Result, select, update, delete
+from sqlalchemy.orm import joinedload
+from tsk.api.models.UserPDModel import AddNewUser, UserUpdate, User
+from typing import Union, List
 import asyncio
 
 
@@ -35,8 +35,43 @@ class UserDbService(Crud):
             await session.close()
 
     @staticmethod
-    async def get_all():
-        print(2)
+    async def get_user_and_posts(user_id: int, session: AsyncSession) -> Union[dict, bool]:
+        """
+        Getting user info and info post by id user
+        :param user_id:
+        :param session:
+        :return:
+        """
+
+        try:
+            user = select(UserTable).options(joinedload(UserTable.posts)).where(UserTable.id == user_id)
+            result: Result = await session.execute(user)
+            user_info_all = result.scalar_one_or_none()
+
+            if user_info_all:
+                return user_info_all
+            raise ValueError
+        except Exception as ex:
+            return False
+        finally:
+            await session.close()
+
+    @staticmethod
+    async def get_all(session: AsyncSession) -> Union[List, List[UserTable]]:
+        """
+        Getting all users
+        :param session:
+        :return:
+        """
+
+        users = select(UserTable).order_by(UserTable.id)
+        users_detail: Result = await session.execute(statement=users)
+        data = users_detail.fetchall()
+
+        if data:
+            return data
+        return []
+
 
     @staticmethod
     async def add_one(new_user: AddNewUser, session: AsyncSession) -> Union[UserTable, bool]:
@@ -63,9 +98,42 @@ class UserDbService(Crud):
             await session.close()
 
     @staticmethod
-    async def update_one(detail: dict):
-        print(3)
+    async def update_one(update_user: UserUpdate, user_id: int, session: AsyncSession) -> bool:
+        """
+        Update info user by id
+        :param update_user:
+        :param user_id:
+        :param session:
+        :return:
+        """
+
+        try:
+            user = update(UserTable).where(UserTable.id == user_id).values(
+                **update_user.model_dump()
+            )
+
+            result = await session.execute(user)
+            await session.commit()
+            return True
+        except Exception as ex:
+            return False
+        finally:
+            await session.close()
 
     @staticmethod
-    async def del_one(user_id: int):
-        print(4)
+    async def del_one(user_id: int, session: AsyncSession) -> bool:
+        """
+        Delete user by id
+        :param user_id:
+        :return:
+        """
+
+        try:
+            del_user = delete(UserTable).where(UserTable.id == user_id)
+            await session.execute(del_user)
+            await session.commit()
+            return True
+        except Exception as ex:
+            return False
+        finally:
+            await session.close()

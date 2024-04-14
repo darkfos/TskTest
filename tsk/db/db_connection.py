@@ -8,7 +8,7 @@ from tsk.db.models.PostModel import PostTable
 class Database:
 
     def __init__(self):
-        self.engine = create_async_engine(url=settings.DB_URL, echo=settings.ECHO_DB)
+        self.engine = create_async_engine(url=settings.db_url, echo=settings.echo_db)
         self.session_maker = async_sessionmaker(
             bind=self.engine
         )

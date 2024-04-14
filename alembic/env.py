@@ -30,7 +30,7 @@ target_metadata = MainBase.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 from tsk.settings import settings
-config.set_main_option("sqlalchemy.url", settings.DB_URL)
+config.set_main_option("sqlalchemy.url", settings.db_url)
 
 
 def run_migrations_offline() -> None:

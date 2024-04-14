@@ -17,7 +17,7 @@ class Settings:
     __ECHO_DB: Final[bool] = True
 
     @property
-    def get_db_URL(self) -> str:
+    def db_url(self) -> str:
         return self.__DB_URL
 
     @property

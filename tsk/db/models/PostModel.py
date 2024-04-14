@@ -10,7 +10,7 @@ from datetime import datetime
 class PostTable(MainBase):
     __tablename__ = "post"
 
-    title: Mapped[str] = mapped_column(String(settings_for_post.title_length), nullable=False)
+    title: Mapped[str] = mapped_column(String(settings_for_post.title), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     date_create: Mapped[datetime] = settings_for_post.date
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))

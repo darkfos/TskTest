@@ -11,7 +11,7 @@ class UserTable(MainBase):
     name_user: Mapped[str] = mapped_column(String(150))
     login: Mapped[str] = mapped_column(String(80), unique=True, nullable=False)
     sex: Mapped[Literal["male", "female"]] = mapped_column(String(12))
-    password: Mapped[int] = mapped_column(Integer, nullable=False)
+    password: Mapped[str] = mapped_column(String(80), nullable=False)
 
     #For detail
     posts: Mapped[List["PostTable"]] = relationship(back_populates="user")

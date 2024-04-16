@@ -1,5 +1,4 @@
 from tsk.db.models.UserModel import UserTable
-from tsk.db.db_connection import db_connect
 from tsk.abs_crud import Crud
 
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -7,7 +6,6 @@ from sqlalchemy import Result, select, update, delete
 from sqlalchemy.orm import joinedload
 from tsk.api.models.UserPDModel import AddNewUser, UserUpdate, User
 from typing import Union, List
-import asyncio
 
 
 class UserDbService(Crud):
@@ -15,7 +13,7 @@ class UserDbService(Crud):
     @staticmethod
     async def get_one(user_id: int, session: AsyncSession) -> Union[UserTable, bool]:
         """
-        Gettind one user by id
+        Getting one user by id
         :param user_id:
         :param session:
         :return:

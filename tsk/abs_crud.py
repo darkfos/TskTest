@@ -11,7 +11,7 @@ class Crud(ABC):
         pass
 
     @abstractmethod
-    async def get_all(self):
+    async def get_all(self, session):
         """
             Gettind all records
         """

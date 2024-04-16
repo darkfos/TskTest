@@ -15,6 +15,7 @@ class Settings:
 
     __DB_URL: Final[str] = getenv("DATABASE_URL")
     __ECHO_DB: Final[bool] = True
+    __AUTH_KEY: Final[str] = getenv("SECRET_KEY_TO_AUTH")
 
     @property
     def db_url(self) -> str:
@@ -27,6 +28,9 @@ class Settings:
     @echo_db.setter
     def echo_db(self, echo: bool) -> None:
         self.__ECHO_DB = echo
+
+    @property
+    def get_auth_key(self) -> str: return self.__AUTH_KEY
 
 
 class SettingsPost:

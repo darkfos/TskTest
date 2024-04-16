@@ -72,7 +72,7 @@ class UserDbService(Crud):
 
 
     @staticmethod
-    async def add_one(new_user: AddNewUser, session: AsyncSession) -> Union[UserTable, bool]:
+    async def add_one(new_user: AddNewUser, session: AsyncSession) -> bool:
         """
         Add a new user
         :param new_user:
@@ -83,15 +83,14 @@ class UserDbService(Crud):
                 name_user = new_user.name_user,
                 login = new_user.login,
                 sex = new_user.sex,
-                password = new_user.password
+                hashed_password = new_user.password
             )
-
             session.add(new_user)
             await session.commit()
             await session.refresh(new_user)
-            return new_user
+            return True
         except Exception as ex:
-            return ex
+            return False
         finally:
             await session.close()
 

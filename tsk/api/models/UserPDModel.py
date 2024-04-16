@@ -30,3 +30,14 @@ class User(AddNewUser, BaseModel):
     """
 
     id: Annotated[int, Field()]
+
+
+class UserRequest(BaseModel):
+
+    login: Annotated[str, Field(max_length=80, min_length=6)]
+    password: Annotated[str, Field(min_length=6)]
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str

@@ -18,7 +18,7 @@ class Security:
         self.__algorithm_crypt: str = "HS256"
 
         #Cryptography
-        self.bcrypt_context = CryptContext(schemes=["bcrypt"], default='auto')
+        self.bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated='auto')
 
     def create_access_token(self, login: str, user_id: int, date_for_token_time: timedelta):
         """

@@ -28,7 +28,7 @@ async def create_user(
 
     new_user.password = security_app.bcrypt_context.hash(new_user.password)
     result = await UserService.add_new_user(new_user=new_user, session=session_db)
-
+    print(result)
     if result:
         return {"message": "Пользователь был успешно зарегистрирован!"}
     else:

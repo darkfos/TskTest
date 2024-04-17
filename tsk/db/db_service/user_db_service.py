@@ -22,7 +22,7 @@ class UserDbService(Crud):
         try:
             user = select(UserTable).where(UserTable.id == user_id)
             user_detail: Result = await session.execute(user)
-            information = user_detail.one_or_none()
+            information = user_detail.one_or_none()[0]
 
             if information:
                 return information

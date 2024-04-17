@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from tsk.api.models.UserPDModel import AddNewUser
+from tsk.api.models.UserPDModel import AddNewUser, InformationAboutUser
 from tsk.db.db_service.user_db_service import UserDbService
 
 from sqlalchemy import select, Result
@@ -44,3 +44,24 @@ class UserService:
         if result:
             return result.hashed_password, result.id
         return False
+
+    @staticmethod
+    async def get_info_user(session: AsyncSession, user_id: int) -> Union[bool, InformationAboutUser]:
+        """
+        Get user info by user_id
+        :param session:
+        :param user_id:
+        :return:
+        """
+
+        user = await UserDbService.get_one(
+            user_id=user_id,
+            session=session
+        )
+
+        print(user)
+
+        if user:
+            user_data: InformationAboutUser = InformationAboutUser()
+        else:
+            return False

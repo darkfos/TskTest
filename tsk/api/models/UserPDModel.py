@@ -20,6 +20,10 @@ class AddNewUser(BaseModel):
     password: Annotated[str,  Field(min_length=6)]
 
 
+class InformationAboutUser(AddNewUser, BaseModel):
+    pass
+
+
 class UserUpdate(AddNewUser, BaseModel):
     pass
 

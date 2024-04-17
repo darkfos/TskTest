@@ -20,7 +20,7 @@ class Security:
         #Cryptography
         self.bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated='auto')
 
-    def create_access_token(self, login: str, user_id: int, date_for_token_time: timedelta):
+    def create_access_token(self, login: str, user_id: int, password: str, date_for_token_time: timedelta):
         """
         Create access token
         :param login:
@@ -29,7 +29,7 @@ class Security:
         :return:
         """
 
-        encode = {"sub": login, "id": user_id} #Data for token
+        encode = {"sub": login, "id": user_id, "password": password} #Data for token
         expires = datetime.datetime.utcnow() + date_for_token_time
         encode.update({"exp": expires}) #add time
         return jwt.encode(encode, self.__api_secret_key, algorithm=self.__algorithm_crypt)
@@ -46,6 +46,7 @@ class Security:
             actual_data = jwt.decode(token=token, key=self.__api_secret_key, algorithms=self.__algorithm_crypt)
             user_login: str = actual_data.get("sub")
             user_id: int = actual_data.get("id")
+            password: str = actual_data.get("password")
 
             #Check data
             if (user_login is None) or (user_id is None):
@@ -54,7 +55,7 @@ class Security:
                     detail="Пользователь не был найден!"
                 )
             else:
-                return {"user_id": user_id, "login": user_login}
+                return {"user_id": user_id, "login": user_login, "password": password}
         except JWTError as jwt_er:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

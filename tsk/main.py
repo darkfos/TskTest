@@ -8,7 +8,9 @@ from tsk.api.auth.auth_p import auth_router
 from tsk.api.routers.user_router import user_router
 
 
-application: FastAPI = FastAPI()
+application: FastAPI = FastAPI(
+    debug="/api/docs"
+)
 
 #include routers
 application.include_router(

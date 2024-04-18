@@ -39,10 +39,10 @@ class UserService:
         user = select(UserTable).filter(
             UserTable.login == login)
         to_find_user: Result = await session.execute(user)
-        result: UserTable = to_find_user.one_or_none()[0]
-
-        if result:
-            return result.hashed_password, result.id
+        if to_find_user:
+            result: UserTable = to_find_user.one_or_none()
+            if result:
+                return result.hashed_password, result.id
         return False
 
     @staticmethod

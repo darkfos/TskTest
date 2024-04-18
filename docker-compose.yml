@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: db
+    image: postgres:15.3-alpine
+    ports:
+      - "5432:5432"
+    environment:
+    - POSTGRES_USER=darkfos82
+    - POSTGRES_PASSWORD=454590
+    - POSTGRES_DB=tasks

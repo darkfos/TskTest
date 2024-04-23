@@ -40,7 +40,7 @@ class UserService:
             UserTable.login == login)
         to_find_user: Result = await session.execute(user)
         if to_find_user:
-            result: UserTable = to_find_user.one_or_none()
+            result: UserTable = to_find_user.one_or_none()[0]
             if result:
                 return result.hashed_password, result.id
         return False

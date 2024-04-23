@@ -26,7 +26,7 @@ async def register_user(new_user: AddNewUser, session: Annotated[AsyncSession, D
 
     #Hash password
     new_user.password = security_app.bcrypt_context.hash(new_user.password)
-    result_add_user = UserService.add_new_user(
+    result_add_user = await UserService.add_new_user(
         new_user=new_user,
         session=session
     )

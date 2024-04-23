@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi import status
+from fastapi.responses import JSONResponse
+
 from tsk.settings import settings
 from tsk.api.models.UserPDModel import UserRequest, Token, AddNewUser
 from tsk.api.services.UserService import UserService
@@ -38,8 +40,10 @@ async def create_token(
             detail="Пароль не соответствует!"
         )
     else:
-        token = security_app.create_access_token(form_data.username, result[-1], result[0], timedelta(minutes=5))
-        return {"access_token": token, "token_type": "bearer"}
+        data_for_token: tuple = security_app.create_access_token(form_data.username, result[-1], result[0], timedelta(minutes=5))
+        response: JSONResponse = JSONResponse(content=data_for_token[0])
+        response.set_cookie(key="Refresh-token", value=data_for_token[1])
+        return response
 
 
 @auth_router.post("/refresh-token", status_code=status.HTTP_201_CREATED)
@@ -51,13 +55,6 @@ async def refresh_token(token: str):
     :return:
     """
 
-    data_to_token: dict = security_app.decode_jwt_token(token=token)
-    if data_to_token:
-        create_new_token = security_app.create_access_token(
-            login=data_to_token.get("login"),
-            password=data_to_token.get("password"),
-            user_id=data_to_token.get("user_id"),
-            date_for_token_time=timedelta(minutes=5)
-        )
-
-        return {"access_token": create_new_token, "token_type": "bearer"}
+    jwt_access_token: dict = {"access_token": security_app.get_new_token_by_refresh(refresh_token=token),
+                              "token_type": "Bearer"}
+    return jwt_access_token

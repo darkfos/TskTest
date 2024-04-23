@@ -16,6 +16,7 @@ class Settings:
     __DB_URL: Final[str] = getenv("DATABASE_URL")
     __ECHO_DB: Final[bool] = True
     __AUTH_KEY: Final[str] = getenv("SECRET_KEY_TO_AUTH")
+    __AUTH_KEY_REFRESH: Final[str] = getenv("SECRET_KEY_FOR_REFRESH_TOKEN")
 
     @property
     def db_url(self) -> str:
@@ -32,7 +33,8 @@ class Settings:
     @property
     def get_auth_key(self) -> str: return self.__AUTH_KEY
 
-
+    @property
+    def get_refresh_key(self) -> str: return self.__AUTH_KEY_REFRESH
 class SettingsPost:
     __title_length: Final[int] = 150
     __date: Final[datetime.datetime] = datetime.datetime.now().date()

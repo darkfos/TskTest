@@ -2,6 +2,8 @@ import asyncio
 import uvicorn
 
 from fastapi import FastAPI
+from fastapi.responses import RedirectResponse
+from contextlib import asynccontextmanager
 
 #from db.db_connection import db_connect
 from tsk.api.auth.auth_p import auth_router
@@ -19,6 +21,12 @@ application.include_router(
 application.include_router(
     user_router
 )
+
+
+#Redirect to start
+@application.get("/")
+async def redirect_to_docs():
+    return RedirectResponse("/docs")
 
 
 if __name__ == "__main__":

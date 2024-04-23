@@ -9,7 +9,6 @@ from contextlib import asynccontextmanager
 from tsk.api.auth.auth_p import auth_router
 from tsk.api.routers.user_router import user_router
 
-
 application: FastAPI = FastAPI(
     debug="/api/docs"
 )

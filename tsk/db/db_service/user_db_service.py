@@ -1,5 +1,6 @@
 from tsk.db.models.UserModel import UserTable
 from tsk.abs_crud import Crud
+from tsk.db.models.PostModel import PostTable
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import Result, select, update, delete
@@ -22,7 +23,7 @@ class UserDbService(Crud):
         try:
             user = select(UserTable).where(UserTable.id == user_id)
             user_detail: Result = await session.execute(user)
-            information = user_detail.one_or_none()[0]
+            information: UserTable = user_detail.one_or_none()[0]
 
             if information:
                 return information
@@ -95,7 +96,7 @@ class UserDbService(Crud):
             await session.close()
 
     @staticmethod
-    async def update_one(update_user: UserUpdate, user_id: int, session: AsyncSession) -> bool:
+    async def update_one(user_id: int, session: AsyncSession, update_user: UserUpdate = None) -> bool:
         """
         Update info user by id
         :param update_user:
@@ -105,14 +106,16 @@ class UserDbService(Crud):
         """
 
         try:
-            user = update(UserTable).where(UserTable.id == user_id).values(
+            stmt = update(UserTable).where(UserTable.id == user_id).values(
                 **update_user.model_dump()
             )
-
-            result = await session.execute(user)
+            await session.execute(statement=stmt)
             await session.commit()
             return True
+
+            raise Exception
         except Exception as ex:
+            print(ex)
             return False
         finally:
             await session.close()
@@ -131,6 +134,27 @@ class UserDbService(Crud):
             await session.commit()
             return True
         except Exception as ex:
+            return False
+        finally:
+            await session.close()
+
+    @staticmethod
+    async def update_password(user_id: int, session: AsyncSession, new_password: str) -> bool:
+        """
+        Update password user
+        :param user_id:
+        :param session:
+        :param new_password:
+        :return:
+        """
+
+        try:
+            stmt = update(UserTable).where(UserTable.id == user_id).values(hashed_password=new_password)
+            await session.execute(statement=stmt)
+            await session.commit()
+            return True
+        except Exception as ex:
+            print(ex)
             return False
         finally:
             await session.close()

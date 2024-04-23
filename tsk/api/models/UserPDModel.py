@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field
 from enum import Enum
-from typing import Annotated
+from typing import Annotated, Optional
 
 
 class SexUser(str, Enum):
@@ -17,16 +17,17 @@ class AddNewUser(BaseModel):
     name_user: Annotated[str, Field(max_length=150)]
     login: Annotated[str, Field(max_length=80, min_length=6)]
     sex: SexUser
-    password: Annotated[str,  Field(min_length=6)]
+    hashed_password: Annotated[str,  Field(min_length=6)]
 
 
-class InformationAboutUser(AddNewUser, BaseModel):
-    pass
+class InformationAboutUser(BaseModel):
+    name_user: Annotated[str, Field(max_length=150)]
+    sex: SexUser
 
 
-class UserUpdate(AddNewUser, BaseModel):
-    pass
-
+class UserUpdate(BaseModel):
+    name_user: Annotated[Optional[str], Field(default=..., max_length=150)] = None
+    sex: Annotated[Optional[SexUser], Field(default=...)] = None
 
 class User(AddNewUser, BaseModel):
     """
@@ -39,7 +40,7 @@ class User(AddNewUser, BaseModel):
 class UserRequest(BaseModel):
 
     login: Annotated[str, Field(max_length=80, min_length=6)]
-    password: Annotated[str, Field(min_length=6)]
+    hashed_password: Annotated[str, Field(min_length=6)]
 
 
 class Token(BaseModel):

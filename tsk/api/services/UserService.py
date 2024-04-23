@@ -4,7 +4,13 @@ from tsk.db.db_service.user_db_service import UserDbService
 
 from sqlalchemy import select, Result
 from tsk.db.models.UserModel import UserTable
+from tsk.api.models.UserPDModel import SexUser, UserUpdate
 from typing import Union
+from fastapi import HTTPException, status
+from tsk.api.auth.security import Security
+
+
+security_apps: Security = Security()
 
 
 class UserService:
@@ -54,14 +60,80 @@ class UserService:
         :return:
         """
 
-        user = await UserDbService.get_one(
+        user: UserTable = await UserDbService.get_one(
             user_id=user_id,
             session=session
         )
 
-        print(user)
-
         if user:
-            user_data: InformationAboutUser = InformationAboutUser()
+            user_data: InformationAboutUser = InformationAboutUser(
+                name_user=user.name_user,
+                sex=user.sex
+            )
+            return user_data
         else:
             return False
+
+    @staticmethod
+    async def update_info_user(session: AsyncSession, user_data: UserUpdate, user_id: int) -> dict:
+        """
+        Update information user service
+        :param session:
+        :param user_id:
+        :param name_user:
+        :param sex:
+        :return:
+        """
+
+        result = await UserDbService.update_one(session=session, update_user=user_data, user_id=user_id)
+        if result: return {"message": True}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_406_NOT_ACCEPTABLE,
+                detail="Не удалось обновить информацию о пользователе"
+            )
+
+    @staticmethod
+    async def update_password_user(session: AsyncSession, token: str, user_new_password: str) -> dict:
+        """
+        Update user password
+        :param session:
+        :param user_new_password:
+        :param user_id:
+        :return:
+        """
+
+        #Get user id
+        user_id: int = security_apps.decode_jwt_token(token=token).get("user_id")
+        user_new_password = security_apps.bcrypt_context.hash(user_new_password)
+        result = await UserDbService.update_password(user_id=user_id, session=session, new_password=user_new_password)
+        if result:
+            return {"message": "Пароль был успешно обновлен!"}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Не удалось обновить пароль"
+            )
+
+    @staticmethod
+    async def del_user_with_id(session: AsyncSession, token: str):
+        """
+        Delete user
+        :param session:
+        :param token:
+        :return:
+        """
+
+        #Get user_id
+        user_id: int = security_apps.decode_jwt_token(token=token).get("user_id")
+        db_service_request = await UserDbService.del_one(
+            user_id=user_id,
+            session=session
+        )
+
+        if db_service_request: return {"message": "Пользователь был успешно удален"}
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Не удалось удалить пользователя"
+            )

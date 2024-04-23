@@ -36,7 +36,7 @@ class Security:
         jwt_token = jwt.encode(encode, self.__api_secret_key, algorithm=self.__algorithm_crypt)
 
         #Refresh token
-        encode_jwt_refresh = {"sub": login, "user_id": user_id, "password": password}
+        encode_jwt_refresh = {"sub": login, "id": user_id, "password": password}
         encode_jwt_refresh.update({"exp": (datetime.datetime.utcnow() + timedelta(days=100))})
         jwt_refresh_token = jwt.encode(encode_jwt_refresh, key=self.__api_secret_key_refresh, algorithm=self.__algorithm_crypt)
         return ({"jwt_token": jwt_token, "token_type": "Bearer"}, jwt_refresh_token)
@@ -71,7 +71,7 @@ class Security:
         except JWTError as jwt_er:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail="Не удалось обработать ваш запрос"
+                detail="Токен не действителен"
             )
 
     def get_new_token_by_refresh(self, refresh_token: str):
@@ -84,7 +84,7 @@ class Security:
             data = jwt.decode(token=refresh_token, key=self.__api_secret_key_refresh, algorithms=self.__algorithm_crypt)
             user_login: str = data.get("sub")
             password: str = data.get("password")
-            user_id: int = data.get("user_id")
+            user_id: int = data.get("id")
 
             if (user_login is None) or (password is None) or (user_id is None):
                 raise HTTPException(

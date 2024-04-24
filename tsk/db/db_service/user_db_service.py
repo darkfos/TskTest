@@ -63,7 +63,7 @@ class UserDbService(Crud):
         :return:
         """
 
-        users = select(UserTable).order_by(UserTable.id)
+        users = select(UserTable.name_user, UserTable.sex).order_by(UserTable.id)
         users_detail: Result = await session.execute(statement=users)
         data = users_detail.fetchall()
 

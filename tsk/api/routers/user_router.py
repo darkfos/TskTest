@@ -1,7 +1,7 @@
 from fastapi import APIRouter, status, Depends, HTTPException
 from api.models.UserPDModel import AddNewUser
 from sqlalchemy.ext.asyncio import AsyncSession
-from typing import Annotated, Optional
+from typing import Annotated, Optional, Union, List
 from db.db_connection import db_connect
 from api.services.UserService import UserService
 from api.auth.security import Security
@@ -54,8 +54,21 @@ async def information_about_user(
     """
 
     user_id: int = security_app.decode_jwt_token(token=token).get("user_id")
-    get_to_user: Optional[bool, InformationAboutUser] = await UserService.get_info_user(session=session, user_id=user_id)
+    get_to_user: Union[bool, InformationAboutUser] = await UserService.get_info_user(session=session, user_id=user_id)
     return get_to_user
+
+
+@user_router.get("/all_users")
+async def get_information_about_all_users(
+    session: Annotated[AsyncSession, Depends(db_connect.get_session)],
+    token: str
+) -> Union[List, List[InformationAboutUser]]:
+    """
+    Get information about all users
+    """
+
+    users = await UserService.get_info_all_users(session=session, token=token)
+    return users
 
 
 @user_router.put("/update-user")

@@ -5,7 +5,7 @@ from db.db_service.user_db_service import UserDbService
 from sqlalchemy import select, Result
 from db.models.UserModel import UserTable
 from api.models.UserPDModel import SexUser, UserUpdate
-from typing import Union
+from typing import Union, List
 from fastapi import HTTPException, status
 from api.auth.security import Security
 
@@ -74,6 +74,20 @@ class UserService:
             return user_data
         else:
             return False
+    
+    @staticmethod
+    async def get_info_all_users(session: AsyncSession, token: str) -> List[InformationAboutUser]:
+        """
+        Get information about all users
+        """
+        
+        #decode json
+
+        user_data = security_apps.decode_jwt_token(token=token)
+
+        users = await UserDbService.get_all(session=session)
+        users = [InformationAboutUser(name_user=user[0], sex=user[-1]) for user in users]
+        return users
 
     @staticmethod
     async def update_info_user(session: AsyncSession, user_data: UserUpdate, user_id: int) -> dict:

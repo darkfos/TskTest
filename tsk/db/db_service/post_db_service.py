@@ -2,15 +2,15 @@ from sqlalchemy import select, update, delete, Result
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
-from tsk.db.models.PostModel import PostTable
-from tsk.abs_crud import Crud
+from db.models.PostModel import PostTable
+from abs_crud import Crud
 from typing import Union, Annotated, Tuple
-from tsk.api.models.PostPDModel import UpdatePost
+from api.models.PostPDModel import UpdatePost
 
 
 class PostDbService(Crud):
-
-    async def get_one(self, post_id: int, session: AsyncSession) -> Union[bool, PostTable]:
+    @staticmethod
+    async def get_one(post_id: int, session: AsyncSession) -> Union[bool, PostTable]:
         """
         Get post by id
         :param post_id:
@@ -29,14 +29,15 @@ class PostDbService(Crud):
         finally:
             await session.close()
 
-    async def get_all(self, session: AsyncSession) -> Union[bool, Tuple[PostTable]]:
+    @staticmethod
+    async def get_all(session: AsyncSession, user_id) -> Union[bool, Tuple[PostTable]]:
         """
         Get all posts
         :return:
         """
 
         try:
-            stmt = select(PostTable)
+            stmt = select(PostTable).where(PostTable.user_id==user_id)
             posts: Result = await session.execute(statement=stmt)
             results = posts.scalars()
 
@@ -48,7 +49,8 @@ class PostDbService(Crud):
         finally:
             await session.close()
 
-    async def add_one(self, session: AsyncSession, new_post: PostTable) -> bool:
+    @staticmethod
+    async def add_one(session: AsyncSession, new_post: PostTable) -> bool:
         """
         Add a new post
         :param args:
@@ -60,11 +62,13 @@ class PostDbService(Crud):
             await session.commit()
             return True
         except Exception as ex:
+            print(ex)
             return False
         finally:
             await session.close()
 
-    async def del_one(self, session: AsyncSession, id_post: int) -> bool:
+    @staticmethod
+    async def del_one(session: AsyncSession, id_post: int) -> bool:
         """
         Delete post by id
         :param session:
@@ -81,7 +85,8 @@ class PostDbService(Crud):
         finally:
             await session.close()
 
-    async def update_one(self, session: AsyncSession, post_id: int, new_data: UpdatePost) -> True:
+    @staticmethod
+    async def update_one(session: AsyncSession, post_id: int, new_data: UpdatePost) -> True:
         """
         Update data for post
         :param session:

@@ -19,4 +19,4 @@ class AddPost(Post, BaseModel):
 class UpdatePost(BaseModel):
     title: Annotated[str, Field(settings_for_post.title, min_length=1)]
     description: Annotated[str, Field(min_length=0)]
-    date_create: Annotated[datetime, Field(default=settings_for_post.date)]
+    date_update: Annotated[datetime, Field(default=settings_for_post.date)] = None

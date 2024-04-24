@@ -2,8 +2,8 @@ import datetime
 
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Integer, String, Text, DateTime, ForeignKey
-from tsk.db.mainbase import MainBase
-from tsk.settings import settings_for_post
+from db.mainbase import MainBase
+from settings import settings_for_post
 from datetime import datetime
 
 

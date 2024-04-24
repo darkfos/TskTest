@@ -1,13 +1,13 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from tsk.api.models.UserPDModel import AddNewUser, InformationAboutUser
-from tsk.db.db_service.user_db_service import UserDbService
+from api.models.UserPDModel import AddNewUser, InformationAboutUser
+from db.db_service.user_db_service import UserDbService
 
 from sqlalchemy import select, Result
-from tsk.db.models.UserModel import UserTable
-from tsk.api.models.UserPDModel import SexUser, UserUpdate
+from db.models.UserModel import UserTable
+from api.models.UserPDModel import SexUser, UserUpdate
 from typing import Union
 from fastapi import HTTPException, status
-from tsk.api.auth.security import Security
+from api.auth.security import Security
 
 
 security_apps: Security = Security()
@@ -46,8 +46,9 @@ class UserService:
             UserTable.login == login)
         to_find_user: Result = await session.execute(user)
         if to_find_user:
-            result: UserTable = to_find_user.one_or_none()[0]
+            result: UserTable = to_find_user.one_or_none()
             if result:
+                result = result[0]
                 return result.hashed_password, result.id
         return False
 

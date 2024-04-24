@@ -6,8 +6,8 @@ from fastapi.responses import RedirectResponse
 from contextlib import asynccontextmanager
 
 #from db.db_connection import db_connect
-from tsk.api.auth.auth_p import auth_router
-from tsk.api.routers.user_router import user_router
+from api.auth.auth_p import auth_router
+from api.routers.user_router import user_router
 
 application: FastAPI = FastAPI(
     debug="/api/docs"

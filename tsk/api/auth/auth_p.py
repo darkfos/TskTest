@@ -2,15 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi import status
 from fastapi.responses import JSONResponse
 
-from tsk.settings import settings
-from tsk.api.models.UserPDModel import UserRequest, Token, AddNewUser
-from tsk.api.services.UserService import UserService
+from settings import settings
+from api.models.UserPDModel import UserRequest, Token, AddNewUser
+from api.services.UserService import UserService
 
-from tsk.db.db_connection import db_connect
+from db.db_connection import db_connect
 from typing import Annotated
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.security import OAuth2PasswordRequestForm
-from tsk.api.auth.security import Security
+from api.auth.security import Security
 from datetime import timedelta
 
 

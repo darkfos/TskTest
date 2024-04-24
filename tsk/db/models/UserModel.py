@@ -1,4 +1,4 @@
-from tsk.db.mainbase import MainBase
+from db.mainbase import MainBase
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import String, Integer
 from typing import List

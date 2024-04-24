@@ -3,7 +3,7 @@ import datetime
 from passlib.context import CryptContext
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from datetime import timedelta
-from tsk.settings import settings
+from settings import settings
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from jose import jwt, JWTError

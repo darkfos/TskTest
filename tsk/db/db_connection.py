@@ -1,8 +1,8 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
-from tsk.settings import settings
-from tsk.db.mainbase import MainBase
-from tsk.db.models.UserModel import UserTable
-from tsk.db.models.PostModel import PostTable
+from settings import settings
+from db.mainbase import MainBase
+from db.models.UserModel import UserTable
+from db.models.PostModel import PostTable
 
 
 class Database:

@@ -1,11 +1,11 @@
-from tsk.db.models.UserModel import UserTable
-from tsk.abs_crud import Crud
-from tsk.db.models.PostModel import PostTable
+from db.models.UserModel import UserTable
+from abs_crud import Crud
+from db.models.PostModel import PostTable
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import Result, select, update, delete
 from sqlalchemy.orm import joinedload
-from tsk.api.models.UserPDModel import AddNewUser, UserUpdate, User
+from api.models.UserPDModel import AddNewUser, UserUpdate, User
 from typing import Union, List
 
 
@@ -84,7 +84,7 @@ class UserDbService(Crud):
                 name_user = new_user.name_user,
                 login = new_user.login,
                 sex = new_user.sex,
-                hashed_password = new_user.password
+                hashed_password = new_user.hashed_password
             )
             session.add(new_user)
             await session.commit()

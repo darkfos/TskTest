@@ -1,11 +1,11 @@
 from fastapi import APIRouter, status, Depends, HTTPException
-from tsk.api.models.UserPDModel import AddNewUser
+from api.models.UserPDModel import AddNewUser
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Annotated, Optional
-from tsk.db.db_connection import db_connect
-from tsk.api.services.UserService import UserService
-from tsk.api.auth.security import Security
-from tsk.api.models.UserPDModel import InformationAboutUser, UserUpdate
+from db.db_connection import db_connect
+from api.services.UserService import UserService
+from api.auth.security import Security
+from api.models.UserPDModel import InformationAboutUser, UserUpdate
 
 
 user_router: APIRouter = APIRouter(
@@ -26,7 +26,7 @@ async def register_user(new_user: AddNewUser, session: Annotated[AsyncSession, D
     """
 
     #Hash password
-    new_user.password = security_app.bcrypt_context.hash(new_user.password)
+    new_user.hashed_password = security_app.bcrypt_context.hash(new_user.hashed_password)
     result_add_user = await UserService.add_new_user(
         new_user=new_user,
         session=session

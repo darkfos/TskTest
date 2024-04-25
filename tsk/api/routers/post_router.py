@@ -17,11 +17,17 @@ post_router: APIRouter = APIRouter(
 async def get_all_posts_user(
     session: Annotated[AsyncSession, Depends(db_connect.get_session)],
     token: str
-) -> List[GetPost]:
+) -> Union[List, List[GetPost]]:
     """
     Get all user posts
     """
-    pass
+
+    all_posts: Union[List, List[GetPost]] = await PostService.get_all_posts_for_user(
+        session=session,
+        token=token
+    )
+
+    return all_posts
 
 
 @post_router.post("/create_post")

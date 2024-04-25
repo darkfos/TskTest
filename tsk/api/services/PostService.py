@@ -25,10 +25,20 @@ class PostService:
         #Get user_id
         user_id: int = security_apps.decode_jwt_token(token=token).get("user_id")
         
-        posts = await PostDbService.get_all(session=session)
+        posts = await PostDbService.get_all(session=session, user_id=user_id)
 
         if posts:
-            print(posts)
+            all_posts: List[GetPost] = [
+                GetPost(
+                    title=post[0].title,
+                    description=post[0].description,
+                    date_create=post[0].date_create,
+                    user_create=post[0].user.name_user
+                )
+                for post in posts
+            ]
+
+            return all_posts
         else:
             return []
     

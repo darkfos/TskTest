@@ -2,6 +2,7 @@ from sqlalchemy import select, update, delete, Result
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
+from db.models.UserModel import UserTable
 from db.models.PostModel import PostTable
 from abs_crud import Crud
 from typing import Union, Annotated, Tuple
@@ -37,9 +38,9 @@ class PostDbService(Crud):
         """
 
         try:
-            stmt = select(PostTable).where(PostTable.user_id==user_id)
+            stmt = select(PostTable).options(joinedload(PostTable.user)).where(PostTable.user_id==user_id)
             posts: Result = await session.execute(statement=stmt)
-            results = posts.scalars()
+            results = posts.all()
 
             if results:
                 return results

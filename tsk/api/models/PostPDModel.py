@@ -25,3 +25,4 @@ class GetPost(BaseModel):
     title: Annotated[str, Field(max_length=settings_for_post.title, min_length=1)]
     description: Annotated[str, Field(min_length=0)]
     date_create: datetime
+    user_create: str

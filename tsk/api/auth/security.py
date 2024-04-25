@@ -7,6 +7,7 @@ from settings import settings
 from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from jose import jwt, JWTError
+from api.exceptions.user_exception import *
 
 
 class Security:
@@ -69,10 +70,7 @@ class Security:
             else:
                 return {"user_id": user_id, "login": user_login, "password": password}
         except JWTError as jwt_er:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Токен не действителен"
-            )
+            http_404_not_right_token(token="token")
 
     def get_new_token_by_refresh(self, refresh_token: str):
         """
@@ -99,7 +97,4 @@ class Security:
 
                 return access_token
         except JWTError as jwt_err:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Your jwt refresh code is invalid"
-            )
+            http_404_not_right_token(token="refresh_token")

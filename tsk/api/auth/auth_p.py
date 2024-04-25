@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.security import OAuth2PasswordRequestForm
 from api.auth.security import Security
 from datetime import timedelta
+from api.exceptions.user_exception import *
 
 
 #To authentication user
@@ -30,15 +31,10 @@ async def create_token(
 ):
     result = await UserService.auth_user(session=session, login=form_data.username)
     if not result:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Пользователь не был найден"
-        )
+        await http_404_not_found_user()
+
     if not security_app.bcrypt_context.verify(form_data.password, result[0]):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Пароль не соответствует!"
-        )
+        await http_400_not_right_password_or_login()
     else:
         data_for_token: tuple = security_app.create_access_token(form_data.username, result[-1], result[0], timedelta(minutes=5))
         response: JSONResponse = JSONResponse(content=data_for_token[0])

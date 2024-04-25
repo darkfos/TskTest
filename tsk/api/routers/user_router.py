@@ -6,6 +6,7 @@ from db.db_connection import db_connect
 from api.services.UserService import UserService
 from api.auth.security import Security
 from api.models.UserPDModel import InformationAboutUser, UserUpdate
+from api.exceptions.user_exception import *
 
 
 user_router: APIRouter = APIRouter(
@@ -35,10 +36,7 @@ async def register_user(new_user: AddNewUser, session: Annotated[AsyncSession, D
     if result_add_user:
         return {"message": "Пользователь был успешно зарегистрирован!"}
     else:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Не удалось создать пользователя!"
-        )
+        await http_400_error_create_user()
 
 
 @user_router.get("/user_info")

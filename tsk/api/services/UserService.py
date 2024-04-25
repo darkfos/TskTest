@@ -8,6 +8,7 @@ from api.models.UserPDModel import SexUser, UserUpdate
 from typing import Union, List
 from fastapi import HTTPException, status
 from api.auth.security import Security
+from api.exceptions.user_exception import *
 
 
 security_apps: Security = Security()
@@ -103,10 +104,7 @@ class UserService:
         result = await UserDbService.update_one(session=session, update_user=user_data, user_id=user_id)
         if result: return {"message": True}
         else:
-            raise HTTPException(
-                status_code=status.HTTP_406_NOT_ACCEPTABLE,
-                detail="Не удалось обновить информацию о пользователе"
-            )
+            await http_406_error_update_user()
 
     @staticmethod
     async def update_password_user(session: AsyncSession, token: str, user_new_password: str) -> dict:
@@ -125,10 +123,7 @@ class UserService:
         if result:
             return {"message": "Пароль был успешно обновлен!"}
         else:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Не удалось обновить пароль"
-            )
+            await http_400_error_with_update_password_user()
 
     @staticmethod
     async def del_user_with_id(session: AsyncSession, token: str):
@@ -148,7 +143,4 @@ class UserService:
 
         if db_service_request: return {"message": "Пользователь был успешно удален"}
         else:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Не удалось удалить пользователя"
-            )
+            await http_400_error_delete_user()
